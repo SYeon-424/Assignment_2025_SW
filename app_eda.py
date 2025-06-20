@@ -231,11 +231,19 @@ class EDA:
             for col in numeric_cols:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
 
-            st.markdown("### 3) 데이터프레임 구조 (`df.info()`)")
-            buffer = io.StringIO()
-            df.info(buf=buffer)
-            #st.text(buffer.getvalue())
-            st.code(buffer.getvalue(), language='text')
+            # st.markdown("### 3) 데이터프레임 구조 (`df.info()`)")
+            # buffer = io.StringIO()
+            # df.info(buf=buffer)
+            # #st.text(buffer.getvalue())
+            # st.code(buffer.getvalue(), language='text')
+            st.markdown("### 3) 데이터프레임 구조 요약")
+            info_df = pd.DataFrame({
+                "Column": df.columns,
+                "Non-Null Count": df.notnull().sum().values,
+                "Dtype": df.dtypes.astype(str).values
+            })
+            st.dataframe(info_df, use_container_width=True)
+
 
             st.markdown("### 4) 요약 통계량 (`df.describe()`)")
             st.dataframe(df.describe())
