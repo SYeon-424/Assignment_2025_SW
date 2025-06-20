@@ -304,7 +304,7 @@ class EDA:
             base_df = region_df[region_df['연도'] == base_year][['지역', '인구']].rename(columns={'인구': '인구_5년전'})
             latest_df = region_df[region_df['연도'] == latest_year][['지역', '인구']].rename(columns={'인구': '인구_최근'})
 
-            merged = pd.merge(base_df, latest_df, on='행정구역')
+            merged = pd.merge(base_df, latest_df, on='지역')
             merged['증감_천명'] = (merged['인구_최근'] - merged['인구_5년전']) / 1000
             merged['증감률(%)'] = ((merged['인구_최근'] - merged['인구_5년전']) / merged['인구_5년전']) * 100
 
