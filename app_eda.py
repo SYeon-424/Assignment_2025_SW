@@ -234,7 +234,8 @@ class EDA:
             st.markdown("### 3) 데이터프레임 구조 (`df.info()`)")
             buffer = io.StringIO()
             df.info(buf=buffer)
-            st.text(buffer.getvalue())
+            #st.text(buffer.getvalue())
+            st.code(buffer.getvalue(), language='text')
 
             st.markdown("### 4) 요약 통계량 (`df.describe()`)")
             st.dataframe(df.describe())
