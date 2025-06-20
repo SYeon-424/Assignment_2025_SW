@@ -210,7 +210,7 @@ class EDA:
 
         df = pd.read_csv(uploaded)
 
-        tabs = st.tab([
+        tabs = st.tabs([
             "1. 기초 통계",
             "2. 연도별 추이",
             "3. 지역별 분석",
