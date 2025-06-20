@@ -223,7 +223,7 @@ class EDA:
             st.header("📊 기초 통계 및 전처리")
 
             st.markdown("### 1) '세종' 지역 결측치('-') → 0 치환")
-            sejong_mask = df['행정구역'].str.contains('세종', na=False)
+            sejong_mask = df['지역'].str.contains('세종', na=False)
             df.loc[sejong_mask] = df.loc[sejong_mask].replace('-', 0)
 
             st.markdown("### 2) 숫자형 변환")
@@ -247,7 +247,7 @@ class EDA:
             st.header("📈 Population Trend by Year")
 
             # '전국' 데이터만 필터링
-            national_df = df[df['행정구역'] == '전국'].copy()
+            national_df = df[df['지역'] == '전국'].copy()
 
             # 연도 정렬 및 숫자형으로 변환
             national_df['연도'] = pd.to_numeric(national_df['연도'], errors='coerce')
@@ -290,19 +290,19 @@ class EDA:
             st.header("📊 Regional Population Change (Last 5 Years)")
 
             # '전국' 제외한 지역만 사용
-            region_df = df[df['행정구역'] != '전국'].copy()
+            region_df = df[df['지역'] != '전국'].copy()
 
             # 연도 숫자화 및 정렬
             region_df['연도'] = pd.to_numeric(region_df['연도'], errors='coerce')
-            region_df = region_df.sort_values(by=['행정구역', '연도'])
+            region_df = region_df.sort_values(by=['지역', '연도'])
 
             # 최근 5년 기준
             latest_year = region_df['연도'].max()
             base_year = latest_year - 5
 
             # 기준 연도, 최신 연도별 인구만 추출
-            base_df = region_df[region_df['연도'] == base_year][['행정구역', '인구']].rename(columns={'인구': '인구_5년전'})
-            latest_df = region_df[region_df['연도'] == latest_year][['행정구역', '인구']].rename(columns={'인구': '인구_최근'})
+            base_df = region_df[region_df['연도'] == base_year][['지역', '인구']].rename(columns={'인구': '인구_5년전'})
+            latest_df = region_df[region_df['연도'] == latest_year][['지역', '인구']].rename(columns={'인구': '인구_최근'})
 
             merged = pd.merge(base_df, latest_df, on='행정구역')
             merged['증감_천명'] = (merged['인구_최근'] - merged['인구_5년전']) / 1000
@@ -315,7 +315,7 @@ class EDA:
                 '충북': 'Chungbuk', '충남': 'Chungnam', '전북': 'Jeonbuk', '전남': 'Jeonnam', '경북': 'Gyeongbuk',
                 '경남': 'Gyeongnam', '제주': 'Jeju'
             }
-            merged['Region'] = merged['행정구역'].map(region_map)
+            merged['Region'] = merged['지역'].map(region_map)
 
             # 내림차순 정렬
             merged_sorted = merged.sort_values(by='증감_천명', ascending=False)
@@ -357,12 +357,12 @@ class EDA:
             st.header("📉 Top 100 Annual Population Changes by Region")
 
             # 전국 제외, 연도 정렬
-            region_df = df[df['행정구역'] != '전국'].copy()
+            region_df = df[df['지역'] != '전국'].copy()
             region_df['연도'] = pd.to_numeric(region_df['연도'], errors='coerce')
-            region_df = region_df.sort_values(by=['행정구역', '연도'])
+            region_df = region_df.sort_values(by=['지역', '연도'])
 
             # 연도별 인구 증감(diff) 계산
-            region_df['증감'] = region_df.groupby('행정구역')['인구'].diff()
+            region_df['증감'] = region_df.groupby('지역')['인구'].diff()
 
             # 상위 100개 증감값 정렬
             top_diff = region_df.dropna(subset=['증감']).copy()
@@ -382,7 +382,7 @@ class EDA:
                     color = 'white'
                 return f'background-color: {color}'
 
-            styled_df = top_100[['연도', '행정구역', '인구', '증감']].style \
+            styled_df = top_100[['연도', '지역', '인구', '증감']].style \
                 .applymap(highlight_diff, subset=['증감']) \
                 .set_properties(**{'text-align': 'center'}) \
                 .set_table_styles([dict(selector='th', props=[('text-align', 'center')])])
@@ -399,7 +399,7 @@ class EDA:
             st.header("📊 Stacked Area Chart by Region and Year")
 
             # 전국 제외 데이터
-            region_df = df[df['행정구역'] != '전국'].copy()
+            region_df = df[df['지역'] != '전국'].copy()
 
             # 연도 숫자형
             region_df['연도'] = pd.to_numeric(region_df['연도'], errors='coerce')
@@ -411,7 +411,7 @@ class EDA:
                 '충북': 'Chungbuk', '충남': 'Chungnam', '전북': 'Jeonbuk', '전남': 'Jeonnam', '경북': 'Gyeongbuk',
                 '경남': 'Gyeongnam', '제주': 'Jeju'
             }
-            region_df['Region'] = region_df['행정구역'].map(region_map)
+            region_df['Region'] = region_df['지역'].map(region_map)
 
             # 피벗 테이블 생성
             pivot_df = region_df.pivot_table(index='연도', columns='Region', values='인구', aggfunc='sum')
