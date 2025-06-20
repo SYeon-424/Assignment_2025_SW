@@ -208,18 +208,8 @@ class EDA:
             st.info("population_trends.csv 파일을 업로드 해주세요.")
             return
 
-        df = pd.read_csv(uploaded, parse_dates=['datetime'])
+        df = pd.read_csv(uploaded)
 
-        # tabs = st.tabs([
-        #     "1. 목적 & 절차",
-        #     "2. 데이터셋 설명",
-        #     "3. 데이터 로드 & 품질 체크",
-        #     "4. Datetime 특성 추출",
-        #     "5. 시각화",
-        #     "6. 상관관계 분석",
-        #     "7. 이상치 제거",
-        #     "8. 로그 변환"
-        # ])
         tabs = st.tab([
             "1. 기초 통계",
             "2. 연도별 추이",
